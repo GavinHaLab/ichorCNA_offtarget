@@ -3,7 +3,7 @@
 #Fred Hutchinson Cancer Research Center
 
 #There might be a problem in code/ichorCNA_offtarget.R with chromosome naming,
-#perhaps just if bam files use UCSC naming.
+#perhaps just if bam files use UCSC naming.  --Anna 10/18/19
 
 #SELECT CHROMOSOMES WHICH MATCH NAMING IN BAM FILES
 chrs:
@@ -17,8 +17,8 @@ ichorCNA_genomeBuild:
 
 #SELECT CENTROMERE CORRESPONDING TO REFERENCE GENOME USED IN ALIGNMENT OF BAM FILES
 ichorCNA_centromere:
-    /fh/fast/ha_g/user/ahoge/software/R/ichorCNA/inst/extdata/GRCh37.p13_centromere_UCSC-gapTable.txt
-    #/fh/fast/ha_g/user/ahoge/software/R/ichorCNA/inst/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt
+    /fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/GRCh37.p13_centromere_UCSC-gapTable.txt
+    #/fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt
 
 #SELECT BIN SIZE
 binSize:  1000000
@@ -27,8 +27,8 @@ binSize:  1000000
 ichorCNA_normalPanel: None
 
 #SELECT GC WIG AND MAP WIG TO MATCH REFERENCE GENOME USED IN ALIGNMENT AND BIN SIZE
-ichorCNA_gcWig: /fh/fast/ha_g/user/ahoge/software/R/ichorCNA/inst/extdata/gc_hg19_1000kb.wig
-ichorCNA_mapWig:  /fh/fast/ha_g/user/ahoge/software/R/ichorCNA/inst/extdata/map_hg19_1000kb.wig
+ichorCNA_gcWig: /fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/gc_hg19_1000kb.wig
+ichorCNA_mapWig:  /fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/map_hg19_1000kb.wig
 
 #SELECT BED FILE OF TARGETED REGIONS, OR "NULL"
 ichorCNA_targets:  NULL
@@ -51,7 +51,7 @@ ichorCNA_txnE:  0.9999
 ichorCNA_txnStrength:  10000
 
 #paths to libraries and scripts
-ichorCNA_libdir: /fh/fast/ha_g/user/ahoge/software/R/ichorCNA
+ichorCNA_libdir: /fh/fast/ha_g/user/gha/software/git/ichorCNA
 ichorCNA_rscript:  code/runIchorCNA_offtarget.R
 readCounterScript:  /fh/fast/ha_g/app/bin/readCounter
 offTarget_script:  code/ichorCNA_offtarget.R
