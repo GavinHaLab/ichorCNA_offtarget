@@ -1,0 +1,47 @@
+#configPlotZoom_offtarget.yaml for plotCNAzoom_offtarget.snakefile
+#Code written by Gavin Ha
+#Template made by Anna Hoge October 18th, 2019
+#Ha Lab
+#Fred Hutchinson Cancer Research Center
+
+#SELECT GENOME BUILD AND GENOME STYLE (might have to match those in config.yaml)
+genomeBuild:
+    hg19
+    #hg38
+genomeStyle:
+    UCSC
+    #NCBI
+
+#MODIFY THIS FILE TO INCLUDE LIST OF REGIONS TO BE PLOTTED
+plot_geneFile:  data/regions.txt
+
+#TO ZOOM IN ON A SPECIFIC REGION
+#plot_id: "RB1"
+#plot_zoom:  TRUE
+#plot_chr:  "chr13"
+#plot_startPos:  48000000
+#plot_endPos:  50000000
+#plot_ylim:  c(-2,2)
+#plot_size:  c(6,4)
+#plot_format:  pdf
+
+#plot_id: "TP53"
+#plot_zoom:  TRUE
+#plot_chr:  "chr17"
+#plot_startPos:  7000000
+#plot_endPos:  8000000
+#plot_ylim:  c(-2,2)
+#plot_size:  c(6,4)
+#plot_format:  pdf
+
+plot_id: "AR_enhancer_zoom"
+plot_zoom:  TRUE
+plot_chr:  "X"
+plot_startPos:  62500000
+plot_endPos:  71500000
+plot_ylim:  c(-2,2)
+plot_size:  c(5,3)
+plot_format:  pdf
+
+plotCN_script:  code/plotIchorCNAzoom.R
+plot_funcs:  code/utils.R

@@ -1,0 +1,15 @@
+#samples.yaml for ichorCNA_offtarget.snakefile
+#Code written by Gavin Ha
+#Template made by Anna Hoge October 18th, 2019
+#Ha Lab
+#Fred Hutchinson Cancer Research Center
+
+samples: #format is sample_name: /path/to/sample.bam for both tumors and normals
+  tumor_sample_name1:  /path/to/tumor/sample1.bam
+  tumor_sample_name2:  /path/to/tumor/sample2.bam
+  normal_sample_name1:  /path/to/normal/sample1.bam
+  normal_sample_name2:  /path/to/normal/sample2.bam
+
+pairings: #format is tumor: matched_normal
+  tumor_sample_name1: normal_sample_name1
+  tumor_sample_name2: normal_sample_name2
