@@ -1,6 +1,4 @@
 #plotCNAzoom_offtarget.snakefile
-#Code written by Gavin Ha
-#Template made by Anna Hoge on November 7th, 2019
 #Ha Lab
 #Fred Hutchinson Cancer Research Center
 
