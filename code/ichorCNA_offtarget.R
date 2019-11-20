@@ -90,8 +90,9 @@ if (!is.null(libdir)){
 }
 #source("~/software/git/scripts/hmmcopy/analysis/offTargetWES/ichorCNA_utils.R")
 #source("~/software/git/scripts/hmmcopy/analysis/offTargetWES/ichorCNA_plotting.R")
-###Changed this to explicit filepath --Anna 9/13/19###
-source("/fh/fast/ha_g/user/gha/software/git/scripts/hmmcopy/analysis/offTargetWES/utils.R")
+
+###Changed this to relative filepath --Anna 9/13/19###
+source("../utils.R")
 
 ## load seqinfo
 seqinfo <- getSeqInfo(genomeBuild, genomeStyle)
