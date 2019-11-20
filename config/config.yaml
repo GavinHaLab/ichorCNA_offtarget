@@ -17,8 +17,8 @@ ichorCNA_genomeBuild:
 
 #SELECT CENTROMERE CORRESPONDING TO REFERENCE GENOME USED IN ALIGNMENT OF BAM FILES
 ichorCNA_centromere:
-    /fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/GRCh37.p13_centromere_UCSC-gapTable.txt
-    #/fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt
+    {/path/to/}ichorCNA/inst/extdata/GRCh37.p13_centromere_UCSC-gapTable.txt
+    #{/path/to/}ichorCNA/inst/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt
 
 #SELECT BIN SIZE
 binSize:  1000000
@@ -27,8 +27,8 @@ binSize:  1000000
 ichorCNA_normalPanel: None
 
 #SELECT GC WIG AND MAP WIG TO MATCH REFERENCE GENOME USED IN ALIGNMENT AND BIN SIZE
-ichorCNA_gcWig: /fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/gc_hg19_1000kb.wig
-ichorCNA_mapWig:  /fh/fast/ha_g/user/gha/software/git/ichorCNA/inst/extdata/map_hg19_1000kb.wig
+ichorCNA_gcWig: {/path/to/}ichorCNA/inst/extdata/gc_hg19_1000kb.wig
+ichorCNA_mapWig:  {/path/to/}ichorCNA/inst/extdata/map_hg19_1000kb.wig
 
 #SELECT BED FILE OF TARGETED REGIONS, OR "NULL"
 ichorCNA_targets:  NULL
@@ -51,9 +51,10 @@ ichorCNA_txnE:  0.9999
 ichorCNA_txnStrength:  10000
 
 #paths to libraries and scripts
-ichorCNA_libdir: /fh/fast/ha_g/user/gha/software/git/ichorCNA
+ichorCNA_libdir: {/path/to/}ichorCNA
 ichorCNA_rscript:  code/runIchorCNA_offtarget.R
-readCounterScript:  /fh/fast/ha_g/app/bin/readCounter
+#PROVIDE PATH TO READ COUNTER BINARY
+readCounterScript:  {/path/to/}bin/readCounter
 offTarget_script:  code/ichorCNA_offtarget.R
 
 #other ichor settings
