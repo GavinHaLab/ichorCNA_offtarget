@@ -46,6 +46,6 @@ To run the snakemake workflows on a slurm cluster, use
 
 and
 
-`snakemake -s plotCNAzoom_offtarget.snakefile --latency-wait 60 --keep-going --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50 -np`
+`snakemake -s plotCNAzoom_offtarget.snakefile --latency-wait 60 --keep-going --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50`
 
 To perform a dry run, where the commands to be executed will be printed, but the snakefile will not actually be run, add `-np` at the end of these commands.  This helps to verify the workflow will run as expected.
