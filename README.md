@@ -16,6 +16,7 @@ The plotCNAzoom_offtarget.snakefile workflow will use the results of ichorCNA_of
   * PyYAML-3.12 or above
 * HMMcopy Suite (http://compbio.bccrc.ca/software/hmmcopy/)
   * In particular, readCounter is used.
+* ichorCNA repository (https://github.com/broadinstitute/ichorCNA)
  
 # Set-up
 ## config/samples.yaml
