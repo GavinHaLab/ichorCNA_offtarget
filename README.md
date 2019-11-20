@@ -23,7 +23,8 @@ The plotCNAzoom_offtarget.snakefile workflow will use the results of ichorCNA_of
 Please specify the samples to be analyzed in config/samples.yaml, following the format explained therein.
  
 ## config/config.yaml
-Coming.
+There are a number of parameters to adjust in config/config.yaml.  Filepaths to where your ichorCNA repository (https://github.com/broadinstitute/ichorCNA) clone was downloaded to must be inserted in a few places, as well as the filepath to your readCounter binary.
+A nice description of some of the other parameters that can be adjusted, such as bin size and segmentation settings, can be found in the README.md for the snakemake workflow of regular (not off-target) ichorCNA, at https://github.com/broadinstitute/ichorCNA/wiki/SnakeMake-pipeline-for-ichorCNA.
 
 ## formatting of .bed file containing targeted regions
 Currently, this code handles .bed files of targeted regions with no headers and at least 5 columns.  Please ensure your .bed file follows this formatting, or change the following code in code/ichorCNA_offtarget.R to fit your purposes:
