@@ -119,7 +119,7 @@ cnColOn <- rep("#D55E00", 30)
 cnPchOn <- 17
 
 if (!is.null(geneList) && geneList != "None"){
-  genes <- read.delim(geneList, header=F, as.is=T)
+  genes <- read.delim(geneList, header=F, as.is=T, comment.char = '#')
 }else{
   genes <- NULL
 }
