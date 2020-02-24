@@ -41,5 +41,5 @@ plot_ylim:  c(-2,2)
 plot_size:  c(5,3)
 plot_format:  pdf
 
-plotCN_script:  code/plotIchorCNAzoom.R
+plotCN_script:  code/plotIchorCNAzoom_offtarget.R
 plot_funcs:  code/utils.R
