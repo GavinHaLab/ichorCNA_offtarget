@@ -51,13 +51,14 @@ rule normalizeOffTarget:
 		centromere=config["ichorCNA_centromere"],
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
+		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
 		plotFileType=config["ichorCNA_plotFileType"],
 		plotYlim=config["ichorCNA_plotYlim"],
 		libdir=config["ichorCNA_libdir"]
 	log:
 		"logs/normalizeOfftarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --TUMWIG {input.tum} --NORMWIG {input.norm} --baitBedTum {params.baitBedTum} --gcWig {params.gcWig} --mapWig {params.mapWig} --centromere {params.centromere} --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --TUMWIG {input.tum} --NORMWIG {input.norm} --baitBedTum {params.baitBedTum} --gcWig {params.gcWig} --mapWig {params.mapWig} --centromere {params.centromere} --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --fracReadsInChrYForMale {params.fracReadsChrYMale} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
 
 rule ichorCNA_OffTarget:
 	input:
@@ -83,7 +84,6 @@ rule ichorCNA_OffTarget:
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
 		centromere=config["ichorCNA_centromere"],
-		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
 		maxFracGenomeSubclone=["ichorCNA_maxFracGenomeSubclone"],
 		maxFracCNASubclone=["ichorCNA_maxFracCNASubclone"],
 		txnE=config["ichorCNA_txnE"],
@@ -96,7 +96,7 @@ rule ichorCNA_OffTarget:
 	log:
 		"logs/ichorCNA/offTarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --fracReadsInChrYForMale {params.fracReadsChrYMale} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
 
 
 rule ichorCNA_OnTarget:
@@ -123,7 +123,6 @@ rule ichorCNA_OnTarget:
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
 		centromere=config["ichorCNA_centromere"],
-		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
 		maxFracGenomeSubclone=config["ichorCNA_maxFracGenomeSubclone"],
 		maxFracCNASubclone=config["ichorCNA_maxFracCNASubclone"],
 		txnE=config["ichorCNA_txnE"],
@@ -136,4 +135,4 @@ rule ichorCNA_OnTarget:
 	log:
 		"logs/ichorCNA/onTarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --fracReadsInChrYForMale {params.fracReadsChrYMale} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
