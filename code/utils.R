@@ -22,7 +22,7 @@ loadWig2GRandDT <- function(file, chrs = c(1:22, "X")){
 
 correctGCbias <- function(counts, chrs = c(1:22, "X", "Y"), gc = NULL, map = NULL, centromere = NULL,
                           flankLength = 100000, targetedSequences = NULL, genomeStyle = "NCBI", applyCorrection = TRUE,
-                          mapScoreThres = 0.9, chrNormalize = c(1:22, "X", "Y")){
+                          mapScoreThres = 0.9, routlier = 0.5, chrNormalize = c(1:22, "X", "Y")){
 	seqlevelsStyle(counts) <- genomeStyle
 	counts <- keepSeqlevels(counts, chrs, pruning.mode="coarse")
 	if (!is.null(gc)){
@@ -46,7 +46,7 @@ correctGCbias <- function(counts, chrs = c(1:22, "X", "Y"), gc = NULL, map = NUL
 	}
 	if (applyCorrection){
 	## correct read counts ##
-      counts <- correctReadCounts.fit(counts, chrNormalize = chrNormalize)
+      counts <- correctReadCounts.fit(counts, chrNormalize = chrNormalize, routlier = routlier)
     }
     if (!is.null(map)) {
       ## filter bins by mappability
@@ -59,8 +59,8 @@ correctGCbias <- function(counts, chrs = c(1:22, "X", "Y"), gc = NULL, map = NUL
 ##################################################
 ###### FUNCTION TO CORRECT GC/MAP BIASES ########
 ##################################################
-correctReadCounts.fit <- function(x, chrNormalize = c(1:22), mappability = 0.9, samplesize = 50000,
-    verbose = TRUE) {
+correctReadCounts.fit <- function(x, chrNormalize = c(1:22), mappability = 0.9, 
+    samplesize = 50000, routlier = 0.05, verbose = TRUE) {
   if (length(x$reads) == 0 | length(x$gc) == 0) {
     stop("Missing one of required columns: reads, gc")
   }
@@ -69,7 +69,7 @@ correctReadCounts.fit <- function(x, chrNormalize = c(1:22), mappability = 0.9, 
   x$valid <- TRUE
   x$valid[x$reads <= 0 | x$gc < 0] <- FALSE
   x$ideal <- TRUE
-  routlier <- 0.01
+  #routlier <- 0.05
   range <- quantile(x$reads[x$valid & chrInd], prob = c(0, 1 - routlier), na.rm = TRUE)
   doutlier <- 0.001
   domain <- quantile(x$gc[x$valid & chrInd], prob = c(doutlier, 1 - doutlier), na.rm = TRUE)
@@ -449,8 +449,7 @@ plotGenomeWide <- function(on, off=NULL, colName = "reads", plotType = "panels",
   mat[, positions := coord$posns]
 
 
-  gp <- ggplot(mat, aes(x=positions, y=value, colour=variable, fill=variable)) +
-  scale_y_continuous(limits=ylim) +
+  gp <- ggplot(mat, aes(x=positions, y=value, color=variable, fill=variable)) +
   scale_fill_manual(values=colors) + scale_color_manual(values=colors) +
   xlab(xlab) + ylab(ylab) + ggtitle(plot.title) +
   theme(panel.background = element_blank(),
@@ -461,9 +460,9 @@ plotGenomeWide <- function(on, off=NULL, colName = "reads", plotType = "panels",
         axis.text = element_text(size = 12),
         legend.position = "none")
   if (geomType == "bar"){
-    gp <- gp + geom_col(width = binSize/4)
+    gp <- gp + geom_col(width = binSize / 4)
   }else if (geomType == "point"){
-    gp <- gp + geom_point(alpha=alpha, size=cex)
+    gp <- gp + geom_point(alpha=alpha, size=cex) + scale_y_continuous(limits=ylim)
   }else{
     stop("plotGenomeWide: need to specify bar or point for geomType.")
   }

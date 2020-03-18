@@ -29,6 +29,7 @@ ichorCNA_normalPanel: None
 #SELECT GC WIG AND MAP WIG TO MATCH REFERENCE GENOME USED IN ALIGNMENT AND BIN SIZE
 ichorCNA_gcWig: {/path/to/}ichorCNA/inst/extdata/gc_hg19_1000kb.wig
 ichorCNA_mapWig:  {/path/to/}ichorCNA/inst/extdata/map_hg19_1000kb.wig
+ichorCNA_mapScoreThres: 0.9
 
 #SELECT BED FILE OF TARGETED REGIONS, OR "NULL"
 ichorCNA_targets:  NULL
@@ -56,6 +57,7 @@ ichorCNA_rscript:  code/runIchorCNA_offtarget.R
 #PROVIDE PATH TO READ COUNTER BINARY
 readCounterScript:  {/path/to/}bin/readCounter
 offTarget_script:  code/normalize_offtarget.R
+offTarget_utils_script: code/utils.R
 
 #other ichor settings
 ichorCNA_chrs:  c(1:22, \"X\")

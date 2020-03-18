@@ -186,9 +186,9 @@ for (n in normal){
 			param$lambda <- rep(logR.var, length(param$ct))
 			param$lambda[param$ct %in% c(2)] <- logR.var 
 			param$lambda[param$ct %in% c(1,3)] <- logR.var 
-			param$lambda[param$ct >= 4] <- logR.var / 5
-			param$lambda[param$ct == max(param$ct)] <- logR.var / 15
-			param$lambda[param$ct.sc.status] <- logR.var / 5
+			param$lambda[param$ct >= 4] <- logR.var / 1
+			param$lambda[param$ct == max(param$ct)] <- logR.var / 1
+			param$lambda[param$ct.sc.status] <- logR.var / 1
     }else{
 			param$lambda[param$ct %in% c(2)] <- lambda[2]
 			param$lambda[param$ct %in% c(1)] <- lambda[1]
@@ -219,44 +219,44 @@ for (n in normal){
                                  estimateSubclone = estimateScPrevalence, verbose = TRUE)
                                      
     for (s in 1:numSamples){
-		iter <- hmmResults.cor$results$iter
-		id <- names(hmmResults.cor$cna)[s]
+  		iter <- hmmResults.cor$results$iter
+  		id <- names(hmmResults.cor$cna)[s]
 
-		# correct integer copy number based on estimated purity and ploidy
-   		correctedResults <- correctIntegerCN(cn = hmmResults.cor$cna[[s]],
-   				segs = hmmResults.cor$results$segs[[s]], 
-    			purity = 1 - hmmResults.cor$results$n[s, iter], ploidy = hmmResults.cor$results$phi[s, iter],
-    			cellPrev = 1 - hmmResults.cor$results$sp[s, iter], 
-    			maxCNtoCorrect.autosomes = maxCN, maxCNtoCorrect.X = maxCN, minPurityToCorrect = 0.03, 
-    			gender = gender, chrs = chrs, correctHOMD = includeHOMD)
-		hmmResults.cor$results$segs[[s]] <- correctedResults$segs
-		hmmResults.cor$cna[[s]] <- correctedResults$cn
-		## convert full diploid solution (of chrs to train) to have 1.0 normal or 0.0 purity
-		## check if there is an altered segment that has at least a minimum # of bins
-		segsS <- hmmResults.cor$results$segs[[s]]
-		segsS <- segsS[segsS$chr %in% chrTrain, ]
-		segAltInd <- which(segsS$event != "NEUT")
-		maxBinLength = -Inf
-		if (sum(segAltInd) > 0){
-			maxInd <- which.max(segsS$end[segAltInd] - segsS$start[segAltInd] + 1)
-			maxSegRD <- GRanges(seqnames=segsS$chr[segAltInd[maxInd]], 
-								ranges=IRanges(start=segsS$start[segAltInd[maxInd]], end=segsS$end[segAltInd[maxInd]]))
-			hits <- findOverlaps(query=maxSegRD, subject=logR.data[[s]][valid, ])
-			maxBinLength <- length(subjectHits(hits))
-		}
-		## check if there are proportion of total bins altered 
-		# if segment size smaller than minSegmentBins, but altFrac > altFracThreshold, then still estimate TF
-		cnaS <- hmmResults.cor$cna[[s]]
-		altInd <- cnaS[cnaS$chr %in% chrTrain, "event"] == "NEUT"
-		altFrac <- sum(!altInd, na.rm=TRUE) / length(altInd)
-		if ((maxBinLength <= minSegmentBins) & (altFrac <= altFracThreshold)){
-			hmmResults.cor$results$n[s, iter] <- 1.0
-		}
-      	## plot solution ##
-		outPlotFile <- paste0(outPlotDir, "/", id, "_genomeWide_", "n", n, "-p", p)
-		mainName[counter] <- paste0(id, ", n: ", n, ", p: ", p, ", log likelihood: ", signif(hmmResults.cor$results$loglik[hmmResults.cor$results$iter], digits = 4))
-		plotGWSolution(hmmResults.cor, s=s, outPlotFile=outPlotFile, plotFileType=plotFileType, 
-					 plotYLim=plotYLim, estimateScPrevalence=estimateScPrevalence, seqinfo=seqinfo, main=mainName[counter])
+  		# correct integer copy number based on estimated purity and ploidy
+     		correctedResults <- correctIntegerCN(cn = hmmResults.cor$cna[[s]],
+     				segs = hmmResults.cor$results$segs[[s]], 
+      			purity = 1 - hmmResults.cor$results$n[s, iter], ploidy = hmmResults.cor$results$phi[s, iter],
+      			cellPrev = 1 - hmmResults.cor$results$sp[s, iter], 
+      			maxCNtoCorrect.autosomes = maxCN, maxCNtoCorrect.X = maxCN, minPurityToCorrect = 0.03, 
+      			gender = gender, chrs = chrs, correctHOMD = includeHOMD)
+  		hmmResults.cor$results$segs[[s]] <- correctedResults$segs
+  		hmmResults.cor$cna[[s]] <- correctedResults$cn
+  		## convert full diploid solution (of chrs to train) to have 1.0 normal or 0.0 purity
+  		## check if there is an altered segment that has at least a minimum # of bins
+  		segsS <- hmmResults.cor$results$segs[[s]]
+  		segsS <- segsS[segsS$chr %in% chrTrain, ]
+  		segAltInd <- which(segsS$event != "NEUT")
+  		maxBinLength = -Inf
+  		if (sum(segAltInd) > 0){
+  			maxInd <- which.max(segsS$end[segAltInd] - segsS$start[segAltInd] + 1)
+  			maxSegRD <- GRanges(seqnames=segsS$chr[segAltInd[maxInd]], 
+  								ranges=IRanges(start=segsS$start[segAltInd[maxInd]], end=segsS$end[segAltInd[maxInd]]))
+  			hits <- findOverlaps(query=maxSegRD, subject=logR.data[[s]][valid, ])
+  			maxBinLength <- length(subjectHits(hits))
+  		}
+  		## check if there are proportion of total bins altered 
+  		# if segment size smaller than minSegmentBins, but altFrac > altFracThreshold, then still estimate TF
+  		cnaS <- hmmResults.cor$cna[[s]]
+  		altInd <- cnaS[cnaS$chr %in% chrTrain, "event"] == "NEUT"
+  		altFrac <- sum(!altInd, na.rm=TRUE) / length(altInd)
+  		if ((maxBinLength <= minSegmentBins) & (altFrac <= altFracThreshold)){
+  			hmmResults.cor$results$n[s, iter] <- 1.0
+  		}
+        	## plot solution ##
+  		outPlotFile <- paste0(outPlotDir, "/", id, "_genomeWide_", "n", n, "-p", p)
+  		mainName[counter] <- paste0(id, ", n: ", n, ", p: ", p, ", log likelihood: ", signif(hmmResults.cor$results$loglik[hmmResults.cor$results$iter], digits = 4))
+  		plotGWSolution(hmmResults.cor, s=s, outPlotFile=outPlotFile, plotFileType=plotFileType, 
+  					 plotYLim=plotYLim, estimateScPrevalence=estimateScPrevalence, seqinfo=seqinfo, main=mainName[counter])
     }
     iter <- hmmResults.cor$results$iter
     results[[counter]] <- hmmResults.cor

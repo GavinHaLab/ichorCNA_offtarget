@@ -4,8 +4,9 @@
 # contact: <gha@fredhutch.org>
 
 # ichorCNA: https://github.com/broadinstitute/ichorCNA
-# date:   July 24, 2019
-# description:
+# date:   March 17, 2020
+# URL: https://github.com/GavinHaLab/ichorCNA_offtarget
+# description: Normalizes targeted capture data for on and off target regions independently.
 
 library(optparse)
 
@@ -16,6 +17,7 @@ option_list <- list(
   make_option(c("--baitBedNorm"), type = "character", default=NULL, help = "Path to normal bait bed file. Optional. Will use --baitBedTum if not provided."),
   make_option(c("--gcWig"), type = "character", help = "Path to GC-content WIG file; Required"),
   make_option(c("--mapWig"), type = "character", default=NULL, help = "Path to mappability score WIG file. Default: [%default]"),
+  make_option(c("--mapScoreThres"), type = "numeric", default = 0.90, help = "Only bins with mappability score >= this value are retained. Default [%default]."),
   make_option(c("--id"), type = "character", default="test", help = "Patient ID. Default: [%default]"),
   make_option(c("--centromere"), type="character", default=NULL, help = "File containing Centromere locations; if not provided then will use hg19 version from ichorCNA package. Default: [%default]"),
   make_option(c("--genomeBuild"), type="character", default="hg19", help="Geome build. Default: [%default]"),
@@ -28,7 +30,8 @@ option_list <- list(
   make_option(c("--plotFileType"), type="character", default="pdf", help = "File format for output plots. Default: [%default]"),
   make_option(c("--plotYLim"), type="character", default="c(-2,2)", help = "ylim to use for chromosome plots. Default: [%default]"),
   make_option(c("--outDir"), type="character", default="./", help = "Output Directory. Default: [%default]"),
-  make_option(c("--libdir"), type = "character", default=NULL, help = "Script library path. Usually exclude this argument unless custom modifications have been made to the ichorCNA R package code and the user would like to source those R files. Default: [%default]")
+  make_option(c("--libdir"), type = "character", default=NULL, help = "Script library path. Usually exclude this argument unless custom modifications have been made to the ichorCNA R package code and the user would like to source those R files. Default: [%default]"),
+  make_option(c("--offTargetFuncs"), type="character", help = "Path to file containing Off-Target R functions to source.")
 )
 parseobj <- OptionParser(option_list=option_list)
 opt <- parse_args(parseobj)
@@ -70,7 +73,8 @@ genomeStyle <- opt$genomeStyle
 seqlevelsStyle(chrs) <- genomeStyle
 seqlevelsStyle(chrs.all) <- genomeStyle
 seqlevelsStyle(chrNormalize) <- genomeStyle
-mapScoreThres <- 0.8
+mapScoreThres <- opt$mapScoreThres
+routlier <- 0.05
 
 dir.create(outDir, recursive = TRUE, showWarnings = FALSE)
 outPlotDir <- paste0(outDir, "/", id)
@@ -88,14 +92,11 @@ if (!is.null(libdir)){
 } else {
     library(ichorCNA)
 }
-#source("~/software/git/scripts/hmmcopy/analysis/offTargetWES/ichorCNA_utils.R")
-#source("~/software/git/scripts/hmmcopy/analysis/offTargetWES/ichorCNA_plotting.R")
 
-###Changed this to relative filepath --Anna 9/13/19###
-source("utils.R")
+source(opt$offTargetFuncs)
 
 ## load seqinfo
-seqinfo <- getSeqInfo(genomeBuild, genomeStyle)
+seqinfo <- getSeqInfo(genomeBuild, genomeStyle, chrs = chrs)
 
 # load bait interval file for this tumor normal pair
 # exclude patient if bait file diff for tumor and normal capture
@@ -126,26 +127,29 @@ seqlevelsStyle(centromere$Chr) <- genomeStyle
 ulpT <- loadWig2GRandDT(tumour_file, chrs.all)
 onOffTargetInd.tum <- getOnOffTargetBinIndex(ulpT$gr, baits)
 ulpT.onTarget.gcCor <- correctGCbias(ulpT$gr[onOffTargetInd.tum$onTarget,],
-	chrs = chrs, genomeStyle = genomeStyle,
+	chrs = chrs, genomeStyle = genomeStyle, routlier = routlier,
 	gc = gc[onOffTargetInd.tum$onTarget,], map = map[onOffTargetInd.tum$onTarget,],
 	centromere = centromere, mapScoreThres = mapScoreThres, chrNormalize = chrNormalize)
 ulpT.offTarget.gcCor <- correctGCbias(ulpT$gr[onOffTargetInd.tum$offTarget,],
-	chrs = chrs, genomeStyle = genomeStyle,
+	chrs = chrs, genomeStyle = genomeStyle, routlier = routlier,
 	gc = gc[onOffTargetInd.tum$offTarget,], map = map[onOffTargetInd.tum$offTarget,],
 	centromere = centromere, mapScoreThres = mapScoreThres, chrNormalize = chrNormalize)
 # normal sample
 ulpN <- loadWig2GRandDT(normal_file, chrs)
 onOffTargetInd.norm <- getOnOffTargetBinIndex(ulpN$gr, baits)
 ulpN.onTarget.gcCor <- correctGCbias(ulpN$gr[onOffTargetInd.norm$onTarget,],
-	chrs = chrs, gc = gc[onOffTargetInd.norm$onTarget,], map = map[onOffTargetInd.norm$onTarget,],
+	chrs = chrs, genomeStyle = genomeStyle, routlier = routlier,
+	gc = gc[onOffTargetInd.norm$onTarget,], map = map[onOffTargetInd.norm$onTarget,],
 	centromere = centromere, mapScoreThres = mapScoreThres, chrNormalize = chrNormalize)
 ulpN.offTarget.gcCor <- correctGCbias(ulpN$gr[onOffTargetInd.norm$offTarget,],
-	chrs = chrs, gc = gc[onOffTargetInd.norm$offTarget,], map = map[onOffTargetInd.norm$offTarget,],
+	chrs = chrs, genomeStyle = genomeStyle, routlier = routlier,
+	gc = gc[onOffTargetInd.norm$offTarget,], map = map[onOffTargetInd.norm$offTarget,],
 	centromere = centromere, mapScoreThres = mapScoreThres, chrNormalize = chrNormalize)
 
-## get gender ##
-counts <- loadReadCountsFromWig(wigToGRanges(normal_file), chrs=chrs, gc=gc, map=map, fracReadsInChrYForMale =
- 				fracReadsInChrYForMale, chrXMedianForMale = Inf,
+## get gender - using tumor sample off-target regions only ##
+counts <- loadReadCountsFromWig(ulpT$gr[onOffTargetInd.tum$offTarget,], chrs=chrs, 
+				gc=gc[onOffTargetInd.tum$offTarget,], map=map[onOffTargetInd.tum$offTarget,], 
+				fracReadsInChrYForMale = fracReadsInChrYForMale, chrXMedianForMale = Inf,
  				centromere=centromere, flankLength = flankLength, targetedSequences=NULL,
 				genomeStyle = genomeStyle, chrNormalize = chrNormalize, mapScoreThres = mapScoreThres)
 gender <- counts$gender$gender
@@ -165,6 +169,11 @@ if (gender=="male" && normalizeMaleX){
 ulpT.onTarget.gcCor$counts$copy.norm <- ulpT.onTarget.gcCor$counts$copy - ulpN.onTarget.gcCor$counts$copy
 ulpT.offTarget.gcCor$counts$copy.norm <- ulpT.offTarget.gcCor$counts$copy - ulpN.offTarget.gcCor$counts$copy
 
+# combine on and off target regions into a single GRanges object
+ulpT.all <- stack(GRangesList(OnTarget = ulpT.onTarget.gcCor$counts, OffTarget = ulpT.offTarget.gcCor$counts), index.var = "region")
+ulpT.all <- sort(ulpT.all)
+ulpN.all <- stack(GRangesList(OnTarget = ulpN.onTarget.gcCor$counts, OffTarget = ulpN.offTarget.gcCor$counts), index.var = "region")
+ulpN.all <- sort(ulpN.all)
 
 # convert GRanges to data.table
 ulpT.onTarget.gcCor.dt <- cbind(as.data.table(ulpT.onTarget.gcCor$counts))
@@ -175,15 +184,23 @@ ulpN.onTarget.gcCor.dt <- cbind(as.data.table(ulpN.onTarget.gcCor$counts))
 setnames(ulpN.onTarget.gcCor.dt, c("seqnames"), c("chr"))
 ulpN.offTarget.gcCor.dt <- cbind(as.data.table(ulpN.offTarget.gcCor$counts))
 setnames(ulpN.offTarget.gcCor.dt, c("seqnames"), c("chr"))
+ulpT.all.dt <- cbind(as.data.table(ulpT.all))
+setnames(ulpT.all.dt, c("seqnames"), c("chr"))
+ulpN.all.dt <- cbind(as.data.table(ulpN.all))
+setnames(ulpN.all.dt, c("seqnames"), c("chr"))
 
 # combine tumor and normal into same data.table
 onTarget.gcCor.dt <- merge(ulpT.onTarget.gcCor.dt, ulpN.onTarget.gcCor.dt, by=c("chr","start","end","width","strand","gc","map"), suffix=c(".tumor",".normal"))
 offTarget.gcCor.dt <- merge(ulpT.offTarget.gcCor.dt, ulpN.offTarget.gcCor.dt, by=c("chr","start","end","width","strand","gc","map"), suffix=c(".tumor",".normal"))
+allTarget.gcCor.dt <- merge(ulpT.all.dt, ulpN.all.dt, by=c("chr","start","end","width","strand","gc","map","region"), suffix=c(".tumor",".normal"))
+
 ## output results to text files
 outFile <- paste0(outDir, "/", id, "_onTarget_cor.txt")
 fwrite(onTarget.gcCor.dt, file=outFile, col.names=T, row.names=F, quote=F, sep="\t")
 outFile <- paste0(outDir, "/", id, "_offTarget_cor.txt")
 fwrite(offTarget.gcCor.dt, file=outFile, col.names=T, row.names=F, quote=F, sep="\t")
+outFile <- paste0(outDir, "/", id, "_allTarget_cor.txt")
+fwrite(allTarget.gcCor.dt, file=outFile, col.names=T, row.names=F, quote=F, sep="\t")
 
 # collect metrics for reads genome-wide and chrX for tumor and normal, on- and off-target
 onTarget.chrXCovT <- ulpT$dt[onOffTargetInd.tum$onTarget][grepl("X", chr), median(reads)]
@@ -251,21 +268,24 @@ outPlot <- paste0(outPlotDir, "/", id, "_readCov_normal.pdf")
 ggsave(gp, file=outPlot, width=12, height=8)
 
 ## plot genome-wide panels GC-corrected counts and matched normal normalized
-gp <- plotGenomeWide(ulpT.onTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "panels", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Number of reads", col="blue", plot.title=NULL)
+gp <- plotGenomeWide(ulpT.onTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "panels", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Log2 Ratio", col="blue", plot.title=NULL)
 outPlot <- paste0(outPlotDir, "/", id, "_corLogR_tumor_onTarget.pdf")
 ggsave(gp, file=outPlot, width=12, height=8)
-gp <- plotGenomeWide(ulpT.offTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "panels", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Number of reads", col="red", plot.title=NULL)
+gp <- plotGenomeWide(ulpT.offTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "panels", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Log2 Ratio", col="red", plot.title=NULL)
 outPlot <- paste0(outPlotDir, "/", id, "_corLogR_tumor_offTarget.pdf")
+ggsave(gp, file=outPlot, width=12, height=8)
+gp <- plotGenomeWide(ulpT.onTarget.gcCor.dt, ulpT.offTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "panels", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Number of reads", col="red", plot.title=NULL, alpha = 0.5)
+outPlot <- paste0(outPlotDir, "/", id, "_corLogR_tumor_allTarget.pdf")
 ggsave(gp, file=outPlot, width=12, height=8)
 
 ## plot genome-wide (no panels, just full profile) counts and matched normal normalized
 gp.on <- plotGenomeWide(ulpT.onTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "genomeWide", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, alpha=0.5, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Log2 Ratio", col="blue", plot.title="On-Target")
 gp.off <- plotGenomeWide(ulpT.offTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "genomeWide", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, alpha=0.5, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Log2 Ratio", col="red", plot.title="Off-Target")
+gp.all <- plotGenomeWide(ulpT.onTarget.gcCor.dt, ulpT.offTarget.gcCor.dt, chrToPlot=c(1:22,"X"), colName = "copy.norm", plotType = "genomeWide", geomType = "point", geneAnnot=NULL, seqinfo=seqinfo, alpha=0.25, ylim=c(-4,4), xlim=NULL, xlab="", ylab="Log2 Ratio", col="red", plot.title="On- and Off-Target Regions")
 outPlot <- paste0(outPlotDir, "/", id, "_corLogR_tumor_genomeWide.pdf")
-pdf(outPlot, width=10, height=5)
-ggMultiPlot(plotlist=list(gp.on, gp.off), ncol=1, layout=NULL)
+pdf(outPlot, width=10, height=7.5)
+ggMultiPlot(plotlist=list(gp.on, gp.off, gp.all), ncol=1, layout=NULL)
 dev.off()
-
 
 ## plot per chromosome GC-corrected counts and matched normal normalized
 ylim <- plotYLim
