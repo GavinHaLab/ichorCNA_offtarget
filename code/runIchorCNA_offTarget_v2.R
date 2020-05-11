@@ -387,6 +387,7 @@ outputParametersToFile(hmmResults.cor, file = outFile)
 
 ## plot solutions for all samples 
 counts <- list(list(counts=logR.data[[1]]))
+counts[[1]]$counts$reads <- counts[[1]]$counts$reads.tumor
 counts[[1]]$counts$ideal <- counts[[1]]$counts$ideal.tumor
 plotSolutions(hmmResults.cor, logR.data, chrs, outDir, counts, numSamples=numSamples,
               logR.column = "logR", call.column = "Corrected_Call", likModel = likModel,
