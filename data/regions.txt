@@ -1,0 +1,11 @@
+#regions.txt for plotCNAzoom_offtarget.snakefile
+#Code written by Gavin Ha
+#Template made by Anna Hoge on November 7th, 2019
+#Ha Lab
+#Fred Hutchinson Cancer Research Center
+
+#INSERT REGION NAME, CHROMOSOME, START COORDINATE OF BIN, END COORDINATE OF BIN
+#(must match bin sizes in config/config.yaml)
+#(bins start coordinates start on 1 and end on 0)
+AR	X	66500001	67000000
+Enh	X	66000001	66500000
