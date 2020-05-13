@@ -31,7 +31,8 @@ option_list <- list(
   make_option(c("--plotYLim"), type="character", default="c(-2,2)", help = "ylim to use for chromosome plots. Default: [%default]"),
   make_option(c("--outDir"), type="character", default="./", help = "Output Directory. Default: [%default]"),
   make_option(c("--libdir"), type = "character", default=NULL, help = "Script library path. Usually exclude this argument unless custom modifications have been made to the ichorCNA R package code and the user would like to source those R files. Default: [%default]"),
-  make_option(c("--offTargetFuncs"), type="character", help = "Path to file containing Off-Target R functions to source.")
+  make_option(c("--offTargetFuncs"), type="character", help = "Path to file containing Off-Target R functions to source."),
+  make_option(c("--sex"), type = "character", default = NULL, help = "User specified gender: male or female [Default: %default]")
 )
 parseobj <- OptionParser(option_list=option_list)
 opt <- parse_args(parseobj)
@@ -75,6 +76,7 @@ seqlevelsStyle(chrs.all) <- genomeStyle
 seqlevelsStyle(chrNormalize) <- genomeStyle
 mapScoreThres <- opt$mapScoreThres
 routlier <- 0.05
+sex <- opt$sex
 
 dir.create(outDir, recursive = TRUE, showWarnings = FALSE)
 outPlotDir <- paste0(outDir, "/", id)
@@ -153,6 +155,12 @@ counts <- loadReadCountsFromWig(ulpT$gr[onOffTargetInd.tum$offTarget,], chrs=chr
  				centromere=centromere, flankLength = flankLength, targetedSequences=NULL,
 				genomeStyle = genomeStyle, chrNormalize = chrNormalize, mapScoreThres = mapScoreThres)
 gender <- counts$gender$gender
+
+if ((!is.null(sex) && sex != "None" && sex != "NULL") && gender != sex ){ #compare with user-defined sex
+  message("Estimated gender (", gender, ") doesn't match to user-defined gender (", sex, "). Use ", sex, " instead.")
+  gender <- sex
+}
+
 # if male, then just normalize chrX to median (ULP and WES)
 if (gender=="male" && normalizeMaleX){
 	# on target
