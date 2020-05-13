@@ -78,20 +78,30 @@ rule ichorCNA_OffTarget:
 		id="{tumor}",
 		ploidy=config["ichorCNA_ploidy"],
 		normal=config["ichorCNA_normal"],
+				sex=config["ichorCNA_sex"],
+		gcwig=config["ichorCNA_gcWig"],
+		mapwig=config["ichorCNA_mapWig"],
+		repTimeWig=config["ichorCNA_repTimeWig"],
+		normalpanel=config["ichorCNA_normalPanel"],
 		estimateNormal=config["ichorCNA_estimateNormal"],
 		estimatePloidy=config["ichorCNA_estimatePloidy"],
 		estimateClonality=config["ichorCNA_estimateClonality"],
 		scStates=config["ichorCNA_scStates"],
 		maxCN=config["ichorCNA_maxCN"],
 		includeHOMD=config["ichorCNA_includeHOMD"],
-		normalpanel=config["ichorCNA_normalPanel"],
 		chrs=config["ichorCNA_chrs"],
 		chrTrain=config["ichorCNA_chrTrain"],
+		likModel=config["ichorCNA_likModel"],
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
 		centromere=config["ichorCNA_centromere"],
+		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
+		minMapScore=config["ichorCNA_minMapScore"],
 		maxFracGenomeSubclone=config["ichorCNA_maxFracGenomeSubclone"],
 		maxFracCNASubclone=config["ichorCNA_maxFracCNASubclone"],
+		normal2IgnoreSC=config["ichorCNA_normal2IgnoreSC"],
+		scPenalty=config["ichorCNA_scPenalty"],
+		exons=config["ichorCNA_exons"],
 		txnE=config["ichorCNA_txnE"],
 		txnStrength=config["ichorCNA_txnStrength"],
 		plotFileType=config["ichorCNA_plotFileType"],
@@ -102,7 +112,7 @@ rule ichorCNA_OffTarget:
 	log:
 		"logs/ichorCNA/offTarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats}  --gcWig {params.gcwig} --mapWig {params.mapwig} --repTimeWig {params.repTimeWig} --sex {params.sex} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --likModel {params.likModel} --centromere {params.centromere} --exons.bed {params.exons} --txnE {params.txnE} --txnStrength {params.txnStrength} --minMapScore {params.minMapScore} --fracReadsInChrYForMale {params.fracReadsChrYMale} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --normal2IgnoreSC {params.normal2IgnoreSC} --scPenalty {params.scPenalty} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
 
 
 rule ichorCNA_OnTarget:
@@ -122,20 +132,30 @@ rule ichorCNA_OnTarget:
 		id="{tumor}",
 		ploidy=config["ichorCNA_ploidy"],
 		normal=config["ichorCNA_normal"],
+				sex=config["ichorCNA_sex"],
+		gcwig=config["ichorCNA_gcWig"],
+		mapwig=config["ichorCNA_mapWig"],
+		repTimeWig=config["ichorCNA_repTimeWig"],
+		normalpanel=config["ichorCNA_normalPanel"],
 		estimateNormal=config["ichorCNA_estimateNormal"],
 		estimatePloidy=config["ichorCNA_estimatePloidy"],
 		estimateClonality=config["ichorCNA_estimateClonality"],
 		scStates=config["ichorCNA_scStates"],
 		maxCN=config["ichorCNA_maxCN"],
 		includeHOMD=config["ichorCNA_includeHOMD"],
-		normalpanel=config["ichorCNA_normalPanel"],
 		chrs=config["ichorCNA_chrs"],
 		chrTrain=config["ichorCNA_chrTrain"],
+		likModel=config["ichorCNA_likModel"],
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
 		centromere=config["ichorCNA_centromere"],
+		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
+		minMapScore=config["ichorCNA_minMapScore"],
 		maxFracGenomeSubclone=config["ichorCNA_maxFracGenomeSubclone"],
 		maxFracCNASubclone=config["ichorCNA_maxFracCNASubclone"],
+		normal2IgnoreSC=config["ichorCNA_normal2IgnoreSC"],
+		scPenalty=config["ichorCNA_scPenalty"],
+		exons=config["ichorCNA_exons"],
 		txnE=config["ichorCNA_txnE"],
 		txnStrength=config["ichorCNA_txnStrength"],
 		plotFileType=config["ichorCNA_plotFileType"],
@@ -146,7 +166,7 @@ rule ichorCNA_OnTarget:
 	log:
 		"logs/ichorCNA/onTarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats}  --gcWig {params.gcwig} --mapWig {params.mapwig} --repTimeWig {params.repTimeWig} --sex {params.sex} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --likModel {params.likModel} --centromere {params.centromere} --exons.bed {params.exons} --txnE {params.txnE} --txnStrength {params.txnStrength} --minMapScore {params.minMapScore} --fracReadsInChrYForMale {params.fracReadsChrYMale} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --normal2IgnoreSC {params.normal2IgnoreSC} --scPenalty {params.scPenalty} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
 
 
 rule ichorCNA_AllTarget:
@@ -166,20 +186,30 @@ rule ichorCNA_AllTarget:
 		id="{tumor}",
 		ploidy=config["ichorCNA_ploidy"],
 		normal=config["ichorCNA_normal"],
+				sex=config["ichorCNA_sex"],
+		gcwig=config["ichorCNA_gcWig"],
+		mapwig=config["ichorCNA_mapWig"],
+		repTimeWig=config["ichorCNA_repTimeWig"],
+		normalpanel=config["ichorCNA_normalPanel"],
 		estimateNormal=config["ichorCNA_estimateNormal"],
 		estimatePloidy=config["ichorCNA_estimatePloidy"],
 		estimateClonality=config["ichorCNA_estimateClonality"],
 		scStates=config["ichorCNA_scStates"],
 		maxCN=config["ichorCNA_maxCN"],
 		includeHOMD=config["ichorCNA_includeHOMD"],
-		normalpanel=config["ichorCNA_normalPanel"],
 		chrs=config["ichorCNA_chrs"],
 		chrTrain=config["ichorCNA_chrTrain"],
+		likModel=config["ichorCNA_likModel"],
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
 		centromere=config["ichorCNA_centromere"],
+		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
+		minMapScore=config["ichorCNA_minMapScore"],
 		maxFracGenomeSubclone=config["ichorCNA_maxFracGenomeSubclone"],
 		maxFracCNASubclone=config["ichorCNA_maxFracCNASubclone"],
+		normal2IgnoreSC=config["ichorCNA_normal2IgnoreSC"],
+		scPenalty=config["ichorCNA_scPenalty"],
+		exons=config["ichorCNA_exons"],
 		txnE=config["ichorCNA_txnE"],
 		txnStrength=config["ichorCNA_txnStrength"],
 		plotFileType=config["ichorCNA_plotFileType"],
@@ -190,5 +220,5 @@ rule ichorCNA_AllTarget:
 	log:
 		"logs/ichorCNA/allTarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --centromere {params.centromere} --txnE {params.txnE} --txnStrength {params.txnStrength} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --logRFile {input.logR} --statsFile {input.stats}  --gcWig {params.gcwig} --mapWig {params.mapwig} --repTimeWig {params.repTimeWig} --sex {params.sex} --normalPanel {params.normalpanel} --ploidy \"{params.ploidy}\" --normal \"{params.normal}\" --maxCN {params.maxCN} --includeHOMD {params.includeHOMD} --chrs \"{params.chrs}\" --chrTrain \"{params.chrTrain}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateScPrevalence {params.estimateClonality} --scStates \"{params.scStates}\" --likModel {params.likModel} --centromere {params.centromere} --exons.bed {params.exons} --txnE {params.txnE} --txnStrength {params.txnStrength} --minMapScore {params.minMapScore} --fracReadsInChrYForMale {params.fracReadsChrYMale} --maxFracGenomeSubclone {params.maxFracGenomeSubclone} --maxFracCNASubclone {params.maxFracCNASubclone} --normal2IgnoreSC {params.normal2IgnoreSC} --scPenalty {params.scPenalty} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
 
