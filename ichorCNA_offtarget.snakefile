@@ -1,3 +1,18 @@
+"""
+#must first check to make sure target bed file is compatible with this code in
+#code/ichorCNA_offtarget.R (might have to change 'skip' and 'colnames'):
+#baits <- fread(baitFile.tum, skip=0)
+#colnames(baits) <- c("chr", "start", "end", "name", "strands")
+
+#before running snakemake, do in tmux terminal:
+ml snakemake/5.2.4-foss-2016b-Python-3.6.6
+ml R/3.6.1-foss-2016b-fh1
+ml Python/3.6.6-foss-2016b
+
+#command to run snakemake (remove -np at end when done validating):
+snakemake -s ichorCNA_offtarget.snakefile --latency-wait 60 --restart-times 3 --keep-going --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50 -np
+"""
+
 configfile: "config/config.yaml"
 configfile: "config/samples.yaml"
 
