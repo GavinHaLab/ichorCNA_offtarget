@@ -276,6 +276,7 @@ for (i in 1:length(ploidy)){
         ", log likelihood: ", signif(hmmResults.cor$results$loglik[hmmResults.cor$results$iter], digits = 4)))
       ## plot individual samples if only single-sample analysis
       if (numSamples == 1){
+        dir.create(file.path(outDir, id))
         outPlotFile <- paste0(outDir, "/", id, "/", id, "_genomeWide_", "n", n[s], "-p", p[s])      
         plotGWSolution(hmmResults.cor, s=s, outPlotFile=outPlotFile, plotFileType=plotFileType, 
               logR.column = "logR", call.column = "event",
