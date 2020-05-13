@@ -8,10 +8,6 @@ ml Python/3.6.6-foss-2016b
 snakemake -s plotCNAzoom_offtarget.snakefile --latency-wait 60 --restart-times 3 --keep-going --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50 -np
 """
 
-#plotCNAzoom_offtarget.snakefile
-#Ha Lab
-#Fred Hutchinson Cancer Research Center
-
 configfile: "config/configPlotZoom_offtarget.yaml"
 configfile: "config/samples.yaml"
 
