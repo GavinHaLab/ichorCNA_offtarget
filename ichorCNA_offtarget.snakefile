@@ -60,10 +60,10 @@ rule normalizeOffTarget:
 		offTargetFuncs=config["offTarget_utils_script"],
 		id="{tumor}",
 		chrs=config["ichorCNA_chrs"],
-		baitBedTum=config["ichorCNA_targets"],
+		baitBedTum=config["ichorCNA_exons"],
 		gcWig=config["ichorCNA_gcWig"],
 		mapWig=config["ichorCNA_mapWig"],
-		mapScoreThres=config["ichorCNA_mapScoreThres"],
+		minMapScore=config["ichorCNA_minMapScore"],
 		centromere=config["ichorCNA_centromere"],
 		genomeBuild=config["ichorCNA_genomeBuild"],
 		genomeStyle=config["ichorCNA_genomeStyle"],
@@ -74,7 +74,7 @@ rule normalizeOffTarget:
 	log:
 		"logs/normalizeOfftarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --offTargetFuncs {params.offTargetFuncs} --TUMWIG {input.tum} --NORMWIG {input.norm} --baitBedTum {params.baitBedTum} --gcWig {params.gcWig} --mapWig {params.mapWig} --mapScoreThres {params.mapScoreThres} --centromere {params.centromere} --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --fracReadsInChrYForMale {params.fracReadsChrYMale} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --offTargetFuncs {params.offTargetFuncs} --TUMWIG {input.tum} --NORMWIG {input.norm} --baitBedTum {params.baitBedTum} --gcWig {params.gcWig} --mapWig {params.mapWig} --mapScoreThres {params.minMapScore} --centromere {params.centromere} --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --fracReadsInChrYForMale {params.fracReadsChrYMale} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
 
 rule ichorCNA_OffTarget:
 	input:
