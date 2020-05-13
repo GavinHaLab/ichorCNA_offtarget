@@ -70,11 +70,12 @@ rule normalizeOffTarget:
 		fracReadsChrYMale=config["ichorCNA_fracReadsInChrYForMale"],
 		plotFileType=config["ichorCNA_plotFileType"],
 		plotYlim=config["ichorCNA_plotYlim"],
-		libdir=config["ichorCNA_libdir"]
+		libdir=config["ichorCNA_libdir"],
+		sex=config["ichorCNA_sex"]
 	log:
 		"logs/normalizeOfftarget/{tumor}.log"
 	shell:
-		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --offTargetFuncs {params.offTargetFuncs} --TUMWIG {input.tum} --NORMWIG {input.norm} --baitBedTum {params.baitBedTum} --gcWig {params.gcWig} --mapWig {params.mapWig} --mapScoreThres {params.minMapScore} --centromere {params.centromere} --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --fracReadsInChrYForMale {params.fracReadsChrYMale} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} > {log} 2> {log}"
+		"Rscript {params.rscript} --id {params.id} --libdir {params.libdir} --offTargetFuncs {params.offTargetFuncs} --TUMWIG {input.tum} --NORMWIG {input.norm} --baitBedTum {params.baitBedTum} --gcWig {params.gcWig} --mapWig {params.mapWig} --mapScoreThres {params.minMapScore} --centromere {params.centromere} --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --fracReadsInChrYForMale {params.fracReadsChrYMale} --plotFileType {params.plotFileType} --plotYLim \"{params.plotYlim}\" --outDir {params.outDir} --sex {params.sex} > {log} 2> {log}"
 
 rule ichorCNA_OffTarget:
 	input:
