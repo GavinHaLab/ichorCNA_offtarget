@@ -26,13 +26,13 @@ binSize:  1000000
 #SELECT NORMAL PANEL, MATCHING BIN SIZE AND REFERENCE GENOME USED IN ALIGNMENT, OR "None"
 ichorCNA_normalPanel: None
 
-#SELECT GC WIG AND MAP WIG TO MATCH REFERENCE GENOME USED IN ALIGNMENT AND BIN SIZE
+#SELECT GC WIG, MAP WIG, AND REPLICATION TIMING FILES TO MATCH REFERENCE GENOME USED IN ALIGNMENT AND BIN SIZE
 ichorCNA_gcWig: {/path/to/}ichorCNA/inst/extdata/gc_hg19_1000kb.wig
 ichorCNA_mapWig:  {/path/to/}ichorCNA/inst/extdata/map_hg19_1000kb.wig
-ichorCNA_mapScoreThres: 0.9
+ichorCNA_repTimeWig: {path/to/}repTime_500kb_hg19.wig
 
 #SELECT BED FILE OF TARGETED REGIONS, OR "NULL"
-ichorCNA_targets:  NULL
+ichorCNA_exons:  NULL
 
 #SELECT OUPUT NAMING STYLE
 ichorCNA_genomeStyle:
@@ -51,15 +51,21 @@ ichorCNA_ploidy:  c(2,3,4)
 ichorCNA_txnE:  0.9999
 ichorCNA_txnStrength:  10000
 
+#SELECT NEWER SETTINGS
+ichorCNA_sex: male
+ichorCNA_likModel: t #use "gauss" if multisample
+ichorCNA_normal2IgnoreSC: 0.95 #does not call subclonal events if normal fraction is above this number
+ichorCNA_scPenalty: 5 #subclonal calls are penalized by this many x.  behavior might not be desirable above a value of 10
+
 #paths to libraries and scripts
 ichorCNA_libdir: {/path/to/}ichorCNA
-ichorCNA_rscript:  code/runIchorCNA_offtarget.R
-#PROVIDE PATH TO READ COUNTER BINARY
+ichorCNA_rscript:  code/runIchorCNA_offTarget.R
 readCounterScript:  {/path/to/}bin/readCounter
 offTarget_script:  code/normalize_offtarget.R
 offTarget_utils_script: code/utils.R
 
 #other ichor settings
+ichorCNA_minMapScore: 0.9
 ichorCNA_chrs:  c(1:22, \"X\")
 ichorCNA_fracReadsInChrYForMale: 0.002
 # chrs used for training ichorCNA parameters, e.g. tumor fraction.
