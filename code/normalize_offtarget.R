@@ -85,7 +85,7 @@ dir.create(outPlotDir)
 save.image(outImage)
 
 
-if (!is.null(libdir)){
+if (!is.null(libdir) && libdir != "None"){
 	source(paste0(libdir,"/R/utils.R"))
 	source(paste0(libdir,"/R/segmentation.R"))
 	source(paste0(libdir,"/R/EM.R"))
